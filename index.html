@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ema Hestiana Live</title>
+
+<style>
+body {
+  margin: 0;
+  background: black;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* TOP */
+.top {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.profile {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 8px;
+  border: 2px solid white;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.live {
+  background: red;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+/* COMMENTS */
+.comments {
+  position: absolute;
+  bottom: 140px;
+  left: 10px;
+  color: white;
+  font-size: 13px;
+  max-width: 75%;
+}
+
+.comment {
+  margin-bottom: 6px;
+  opacity: 0.95;
+}
+
+/* USERNAME COLOR (ELEGAN) */
+.username {
+  font-weight: bold;
+}
+
+.c1 { color: #a0c4ff; }
+.c2 { color: #ffafcc; }
+.c3 { color: #ffd6a5; }
+.c4 { color: #b9fbc0; }
+.c5 { color: #cdb4db; }
+.c6 { color: #f1f1f1; }
+
+/* RIGHT */
+.right {
+  position: absolute;
+  right: 10px;
+  bottom: 150px;
+  color: white;
+  text-align: center;
+}
+
+.icon {
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+/* JOIN BUTTON */
+.join-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  padding: 14px;
+  background: linear-gradient(45deg, #ff0050, #ff7a00);
+  color: white;
+  text-align: center;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(255,0,80,0.6);
+}
+
+/* GIFT */
+.gift {
+  position: absolute;
+  bottom: 190px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: gold;
+  font-weight: bold;
+  font-size: 14px;
+  animation: floatUp 2s ease forwards;
+  text-shadow: 0 0 8px rgba(255,215,0,0.8);
+}
+
+@keyframes floatUp {
+  0% {opacity:0; transform:translate(-50%,20px);}
+  50% {opacity:1;}
+  100% {opacity:0; transform:translate(-50%,-100px);}
+}
+
+/* HEART */
+.heart {
+  position: absolute;
+  bottom: 140px;
+  right: 20px;
+  animation: floatHeart 2s linear forwards;
+}
+
+@keyframes floatHeart {
+  0% {opacity:1;}
+  100% {opacity:0; transform:translateY(-120px);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="top">
+    <img class="profile" src="https://i.imgur.com/rrS7Tub.jpeg">
+    <div>
+      <div class="name">Ema Hestiana <span class="live">LIVE</span></div>
+      <div style="font-size:12px;">3.6K watching</div>
+    </div>
+  </div>
+
+  <div class="comments" id="comments"></div>
+
+  <div class="right">
+    <div class="icon">❤️</div>
+    <div class="icon">💬</div>
+    <div class="icon">🎁</div>
+  </div>
+
+  <div class="join-btn" onclick="start()">
+    ▶ Masuk Live Sekarang 🔥
+  </div>
+
+</div>
+
+<script>
+
+// DATA
+const names = [
+  "Budi","Agus","Rizky","Dika","Andi",
+  "Fajar","Rian","Yoga","Adit","Ilham",
+  "Reza","Ardi","Bayu","Hendra","Rafi",
+  "Tegar","Iqbal","Zaki","Fikri","Rama"
+];
+
+const commentsList = [
+  "cantik banget sih kamu 😍",
+  "fix ini paling cantik di live hari ini",
+  "aku diem aja takut jatuh cinta 😳",
+  "senyumnya bikin adem banget",
+  "ini real atau filter sih 😭",
+  "aku gak fokus dengerin kamu",
+  "bahaya ini kalau lama-lama disini",
+  "auto betah nonton kamu",
+  "ini sih udah level beda",
+  "aku kira model ternyata streamer",
+  "serius nanya kamu manusia apa bidadari",
+  "kok bisa secantik ini ya",
+  "aku save dulu momen ini",
+  "ini kalau di follow balik bahaya 😳",
+  "senyumnya mahal banget",
+  "aku nonton karena kamu jujur",
+  "yang lain lewat dulu deh",
+  "ini bikin nagih sumpah",
+  "aku kira cuma lewat bentar jadi lama 😭",
+  "kamu tau gak kamu cantik banget"
+];
+
+const styles = ["serius","jujur","asli","fix","demi apa","gak bohong"];
+const colors = ["c1","c2","c3","c4","c5","c6"];
+
+// KOMENTAR
+function randomComment() {
+  let text = commentsList[Math.floor(Math.random()*commentsList.length)];
+  const style = styles[Math.floor(Math.random()*styles.length)];
+
+  if (Math.random() < 0.3) {
+    text = text.replace("banget", "bangettt");
+  }
+
+  return text + " " + style;
+}
+
+function commentLoop() {
+  const el = document.createElement("div");
+  el.className = "comment";
+
+  const name = names[Math.floor(Math.random()*names.length)];
+  const color = colors[Math.floor(Math.random()*colors.length)];
+
+  el.innerHTML = `<span class="username ${color}">${name}</span>: ${randomComment()}`;
+
+  document.getElementById("comments").appendChild(el);
+
+  setTimeout(()=> el.remove(), 5000);
+
+  const delay = Math.floor(Math.random()*800)+500;
+  setTimeout(commentLoop, delay);
+}
+commentLoop();
+
+
+// GIFT
+const gifts = ["🌹 Rose","💎 Diamond","🚀 Rocket","🎁 Gift","👑 Crown"];
+
+function sendGift() {
+  const el = document.createElement("div");
+  el.className = "gift";
+
+  const name = names[Math.floor(Math.random()*names.length)];
+  const gift = gifts[Math.floor(Math.random()*gifts.length)];
+
+  const combo = Math.random() < 0.5 
+    ? " x" + (Math.floor(Math.random()*10)+2)
+    : "";
+
+  el.innerText = name + " sent " + gift + combo;
+
+  document.querySelector(".container").appendChild(el);
+
+  setTimeout(()=> el.remove(), 2000);
+}
+
+function giftLoop() {
+  const burst = Math.random() < 0.6 ? 1 : Math.floor(Math.random()*3)+1;
+
+  for (let i = 0; i < burst; i++) {
+    setTimeout(sendGift, i * 200);
+  }
+
+  const delay = Math.floor(Math.random()*800)+500;
+  setTimeout(giftLoop, delay);
+}
+giftLoop();
+
+
+// HEART
+function heartLoop() {
+  const el = document.createElement("div");
+  el.className = "heart";
+  el.innerText = "❤️";
+
+  document.querySelector(".container").appendChild(el);
+
+  setTimeout(()=> el.remove(), 2000);
+  setTimeout(heartLoop, 400);
+}
+heartLoop();
+
+
+// REDIRECT
+function start() {
+  setTimeout(()=>{
+    window.location.href = "https://s.shopee.co.id/6pw61VnaZv"; // GANTI LINK
+  },500);
+}
+
+</script>
+<script src="https://bendspecimen.com/a4/c6/a9/a4c6a9f83138dc4483e0ace1636db0a0.js"></script>
+</body>
+</html>
