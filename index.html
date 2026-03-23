@@ -2,188 +2,202 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hana Live</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <style>
-body {
-  margin: 0;
-  background: black;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-}
+  /* MENYEMBUNYIKAN ELEMEN BAWAAN BLOGGER */
+  .post-header, .post-footer, .post-title, .sidebar-wrapper, .header-wrapper, #header, .footer-outer { display: none !important; }
+  
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body, html { 
+    background: #000; 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+    overflow: hidden; 
+    height: 100%; 
+    width: 100%;
+  }
 
-.container {
-  width: 100%;
-  max-width: 400px;
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
+  /* WRAPPER UTAMA - FULL SCREEN DI SEMUA HP */
+  .live-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100dvh; /* Mengikuti tinggi layar HP secara dinamis */
+    background: #000;
+    z-index: 9999;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
 
-/* TOP */
-.top {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: flex;
-  align-items: center;
-  color: white;
-}
+  .app-frame {
+    position: relative;
+    width: 100%;
+    max-width: 500px; /* Batas lebar untuk Desktop agar tidak pecah */
+    height: 100%;
+    background: #000;
+    cursor: pointer;
+  }
 
-.profile {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  margin-right: 8px;
-  border: 2px solid white;
-}
+  /* VIDEO BACKGROUND - FULL COVER */
+  .video-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Video memenuhi layar seperti TikTok */
+    z-index: 1;
+  }
 
-.name {
-  font-size: 14px;
-  font-weight: bold;
-}
+  .overlay-black {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 60%;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
 
-.live {
-  background: red;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  margin-left: 6px;
-}
+  /* HEADER PROFILE */
+  .live-header {
+    position: absolute;
+    top: env(safe-area-inset-top, 20px);
+    left: 15px; right: 15px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 10;
+    pointer-events: none;
+  }
 
-/* COMMENTS */
-.comments {
-  position: absolute;
-  bottom: 140px;
-  left: 10px;
-  color: white;
-  font-size: 13px;
-  max-width: 75%;
-}
+  .profile-card {
+    display: flex; align-items: center;
+    background: rgba(0,0,0,0.4);
+    padding: 4px 12px 4px 4px;
+    border-radius: 30px;
+    color: #fff;
+    backdrop-filter: blur(10px);
+  }
 
-.comment {
-  margin-bottom: 6px;
-  opacity: 0.95;
-}
+  .pfp { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #fff; margin-right: 10px; object-fit: cover; }
 
-/* USERNAME COLOR (ELEGAN) */
-.username {
-  font-weight: bold;
-}
+  .live-badge {
+    background: #ff0050; color: #fff;
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 11px; font-weight: bold;
+    animation: pulse 1.5s infinite;
+  }
 
-.c1 { color: #a0c4ff; }
-.c2 { color: #ffafcc; }
-.c3 { color: #ffd6a5; }
-.c4 { color: #b9fbc0; }
-.c5 { color: #cdb4db; }
-.c6 { color: #f1f1f1; }
+  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
-/* RIGHT */
-.right {
-  position: absolute;
-  right: 10px;
-  bottom: 150px;
-  color: white;
-  text-align: center;
-}
+  /* GIFT NOTIFICATION */
+  #giftBox { position: absolute; top: 100px; left: 15px; z-index: 15; width: 85%; pointer-events: none; }
+  
+  .gift-pop {
+    display: flex; align-items: center;
+    background: linear-gradient(90deg, rgba(255,0,80,0.85), rgba(255,165,0,0.6));
+    color: #fff; padding: 8px 15px; border-radius: 30px;
+    margin-bottom: 10px; font-size: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    animation: slideInOut 3.5s ease-in-out forwards;
+  }
 
-.icon {
-  margin-bottom: 15px;
-  font-size: 22px;
-}
+  @keyframes slideInOut { 
+    0% { transform: translateX(-110%); opacity: 0; }
+    10% { transform: translateX(0); opacity: 1; }
+    85% { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(120%); opacity: 0; }
+  }
 
-/* JOIN BUTTON */
-.join-btn {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 85%;
-  padding: 14px;
-  background: linear-gradient(45deg, #ff0050, #ff7a00);
-  color: white;
-  text-align: center;
-  border-radius: 30px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(255,0,80,0.6);
-}
+  /* CHAT BOX - LEBIH BESAR & JELAS */
+  #chatBox {
+    position: absolute; bottom: 120px; left: 15px;
+    width: 80%; max-height: 220px;
+    overflow: hidden; z-index: 10;
+    display: flex; flex-direction: column-reverse;
+    pointer-events: none;
+  }
 
-/* GIFT */
-.gift {
-  position: absolute;
-  bottom: 190px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: gold;
-  font-weight: bold;
-  font-size: 14px;
-  animation: floatUp 2s ease forwards;
-  text-shadow: 0 0 8px rgba(255,215,0,0.8);
-}
+  .chat-row {
+    background: rgba(0,0,0,0.25); color: #fff;
+    padding: 6px 14px; border-radius: 12px;
+    margin-bottom: 6px; font-size: 14px;
+    line-height: 1.5; animation: chatIn 0.3s ease;
+  }
 
-@keyframes floatUp {
-  0% {opacity:0; transform:translate(-50%,20px);}
-  50% {opacity:1;}
-  100% {opacity:0; transform:translate(-50%,-100px);}
-}
+  .user-gold { color: #ffd700; font-weight: bold; margin-right: 6px; }
 
-/* HEART */
-.heart {
-  position: absolute;
-  bottom: 140px;
-  right: 20px;
-  animation: floatHeart 2s linear forwards;
-}
+  @keyframes chatIn { from { opacity: 0; transform: translateY(10px); } }
 
-@keyframes floatHeart {
-  0% {opacity:1;}
-  100% {opacity:0; transform:translateY(-120px);}
-}
+  /* HEART TAP-TAP */
+  .heart-tap {
+    position: absolute; font-size: 45px; z-index: 50;
+    pointer-events: none; animation: fly 1.3s ease-out forwards;
+  }
+
+  @keyframes fly {
+    0% { transform: scale(0.5) rotate(0deg); opacity: 1; }
+    100% { transform: scale(2) translateY(-350px) rotate(30deg); opacity: 0; }
+  }
+
+  /* CTA BUTTON - FULL WIDTH */
+  .cta-section { position: absolute; bottom: 35px; left: 5%; width: 90%; z-index: 100; }
+  
+  .btn-action {
+    display: block; width: 100%; background: #fff; color: #000;
+    text-align: center; padding: 18px; border-radius: 50px;
+    font-weight: bold; font-size: 18px; text-decoration: none;
+    box-shadow: 0 8px 25px rgba(255,255,255,0.3); transition: 0.2s;
+  }
+
+  .btn-action:active { transform: scale(0.96); }
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="live-container">
+  <div class="app-frame" id="tapArea">
+    
+    <video class="video-bg" autoplay muted loop playsinline>
+      <source src="https://i.imgur.com/gUZnRFf.mp4" type="video/mp4">
+    </video>
 
-  <div class="top">
-    <img class="profile" src="https://i.imgur.com/cQ2pMJw.jpeg">
-    <div>
-      <div class="name">Hana<span class="live">LIVE</span></div>
-      <div style="font-size:12px;">946K watching</div>
+    <div class="overlay-black"></div>
+
+    <div class="live-header">
+      <div class="profile-card">
+        <img src="https://i.imgur.com/cQ2pMJw.jpeg" class="pfp">
+        <div>
+          <b style="font-size: 13px;">🔴 Hana LIVE</b><br>
+          <span id="vCount" style="font-size: 11px; opacity:0.9;">1,452 Penonton</span>
+        </div>
+      </div>
+      <div class="live-tag">LIVE</div>
     </div>
+
+    <div id="giftBox"></div>
+    <div id="chatBox"></div>
+
+    <div class="cta-section">
+      <a href="URL_TUJUAN_ANDA" class="btn-action">JOIN LIVE ⚡</a>
+    </div>
+
   </div>
-
-  <div class="comments" id="comments"></div>
-
-  <div class="right">
-    <div class="icon">❤️</div>
-    <div class="icon">💬</div>
-    <div class="icon">🎁</div>
-  </div>
-
-  <div class="join-btn" onclick="start()">
-    ▶ Join Live Sekarang 🔥
-  </div>
-
 </div>
 
 <script>
+  // Database 20 Nama & Komentar Berbeda (Update)
+  const users = [
+    "Bang_Ganteng", "Mas_Budi", "Putra_Mdn", "Doni_Keren", "Rian_Sadboy", 
+    "Indra_Cool", "Dani_Ramadhan", "Rizky_Ganteng", "Abang_Jago", "Satria_F",
+    "Aris_Wibowo", "Bagas_Saputra", "Eko_Prasetyo", "Fajar_R", "Gading_99",
+    "Hendra_Wijaya", "Irfan_Hakim", "Joko_Tingkir", "Kevin_San", "Lutfi_Arif"
+  ];
 
-// DATA
-const names = [
-  "Budi","Agus","Rizky","Dika","Andi",
-  "Fajar","Rian","Yoga","Adit","Ilham",
-  "Reza","Ardi","Bayu","Hendra","Rafi",
-  "Tegar","Iqbal","Zaki","Fikri","Rama"
-];
-
-const commentsList = [
-  "cantik banget sih kamu 😍",
+  const msgs = [
+    "cantik banget sih kamu 😍",
   "fix ini paling cantik di live hari ini",
   "aku diem aja takut jatuh cinta 😳",
   "senyumnya bikin adem banget",
@@ -203,97 +217,51 @@ const commentsList = [
   "ini bikin nagih sumpah",
   "aku kira cuma lewat bentar jadi lama 😭",
   "kamu tau gak kamu cantik banget"
-];
+  ];
+  
+  const gifts = ["🌹 Mawar", "💎 Berlian", "🚗 Mobil Sport", "👑 Mahkota", "🎁 Kado Spesial"];
 
-const styles = ["serius","jujur","asli","fix","demi apa","gak bohong"];
-const colors = ["c1","c2","c3","c4","c5","c6"];
+  const tapArea = document.getElementById('tapArea');
+  const chatBox = document.getElementById('chatBox');
+  const giftBox = document.getElementById('giftBox');
 
-// KOMENTAR
-function randomComment() {
-  let text = commentsList[Math.floor(Math.random()*commentsList.length)];
-  const style = styles[Math.floor(Math.random()*styles.length)];
+  // 1. Logika Tap-Tap Love (Sesuai Skrip Anda)
+  tapArea.addEventListener('click', (e) => {
+    const h = document.createElement('div');
+    h.className = 'heart-tap';
+    h.innerHTML = '❤️';
+    h.style.left = (e.clientX - 25) + 'px';
+    h.style.top = (e.clientY - 25) + 'px';
+    tapArea.appendChild(h);
+    setTimeout(() => h.remove(), 1300);
+  });
 
-  if (Math.random() < 0.3) {
-    text = text.replace("banget", "bangettt");
+  // 2. Simulasi Chat & Gift (Kecepatan Tinggi - Sesuai Skrip Anda)
+  function startLive() {
+    const c = document.createElement('div');
+    c.className = 'chat-row';
+    c.innerHTML = `<span class="user-gold">${users[Math.floor(Math.random()*users.length)]}</span>${msgs[Math.floor(Math.random()*msgs.length)]}`;
+    chatBox.prepend(c);
+    if(chatBox.children.length > 7) chatBox.lastChild.remove();
+
+    if(Math.random() > 0.6) {
+      const g = document.createElement('div');
+      g.className = 'gift-pop';
+      g.innerHTML = `🎁 <b>${users[Math.floor(Math.random()*users.length)]}</b> mengirim ${gifts[Math.floor(Math.random()*gifts.length)]}`;
+      giftBox.appendChild(g);
+      setTimeout(() => g.remove(), 3500);
+    }
+
+    setTimeout(startLive, Math.random() * (1500 - 600) + 600);
   }
 
-  return text + " " + style;
-}
+  // 3. Update Viewer (Sesuai Skrip Anda)
+  setInterval(() => {
+    const n = 1300 + Math.floor(Math.random() * 200);
+    document.getElementById('vCount').innerText = n.toLocaleString('id-ID') + " Penonton";
+  }, 4000);
 
-function commentLoop() {
-  const el = document.createElement("div");
-  el.className = "comment";
-
-  const name = names[Math.floor(Math.random()*names.length)];
-  const color = colors[Math.floor(Math.random()*colors.length)];
-
-  el.innerHTML = `<span class="username ${color}">${name}</span>: ${randomComment()}`;
-
-  document.getElementById("comments").appendChild(el);
-
-  setTimeout(()=> el.remove(), 5000);
-
-  const delay = Math.floor(Math.random()*800)+500;
-  setTimeout(commentLoop, delay);
-}
-commentLoop();
-
-
-// GIFT
-const gifts = ["🌹 Rose","💎 Diamond","🚀 Rocket","🎁 Gift","👑 Crown"];
-
-function sendGift() {
-  const el = document.createElement("div");
-  el.className = "gift";
-
-  const name = names[Math.floor(Math.random()*names.length)];
-  const gift = gifts[Math.floor(Math.random()*gifts.length)];
-
-  const combo = Math.random() < 0.5 
-    ? " x" + (Math.floor(Math.random()*10)+2)
-    : "";
-
-  el.innerText = name + " sent " + gift + combo;
-
-  document.querySelector(".container").appendChild(el);
-
-  setTimeout(()=> el.remove(), 2000);
-}
-
-function giftLoop() {
-  const burst = Math.random() < 0.6 ? 1 : Math.floor(Math.random()*3)+1;
-
-  for (let i = 0; i < burst; i++) {
-    setTimeout(sendGift, i * 200);
-  }
-
-  const delay = Math.floor(Math.random()*800)+500;
-  setTimeout(giftLoop, delay);
-}
-giftLoop();
-
-
-// HEART
-function heartLoop() {
-  const el = document.createElement("div");
-  el.className = "heart";
-  el.innerText = "❤️";
-
-  document.querySelector(".container").appendChild(el);
-
-  setTimeout(()=> el.remove(), 2000);
-  setTimeout(heartLoop, 400);
-}
-heartLoop();
-
-
-// REDIRECT
-function start() {
-  setTimeout(()=>{
-    window.location.href = "https://s.shopee.co.id/6pw61VnaZv"; // GANTI LINK
-  },500);
-}
-
+  startLive();
 </script>
 
 </body>
